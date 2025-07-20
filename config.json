@@ -1,11 +1,366 @@
 {
-  "feeds": [
-    {"name": "NHK総合", "url": "https://www3.nhk.or.jp/rss/news/cat0.xml"},
-    {"name": "朝日新聞", "url": "https://www.asahi.com/rss/asahi/newsheadlines.rdf"},
-    {"name": "金融庁", "url": "https://www.fsa.go.jp/kouhou/rss.html"},
-    {"name": "Investing.com", "url": "https://jp.investing.com/webmaster-tools/rss"}
-  ],
-  "spreadsheet_id": "1JMmdKwwcA06w_1IHOOrrixtKJI9QVndnXMeQnen1sik",
-  "client_id": "864737567403-2rr2nedjhd6it4rnjh9qcijo9ocf76r2.apps.googleusercontent.com",
-  "client_secret": "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"
+    "rss_feeds": [
+        {
+            "name": "NHK総合",
+            "url": "https://www.nhk.or.jp/rss/news/cat0.xml"
+        },
+        {
+            "name": "NHK政治",
+            "url": "https://www.nhk.or.jp/rss/news/cat1.xml"
+        },
+        {
+            "name": "NHK経済",
+            "url": "https://www.nhk.or.jp/rss/news/cat2.xml"
+        },
+        {
+            "name": "NHK社会",
+            "url": "https://www.nhk.or.jp/rss/news/cat3.xml"
+        },
+        {
+            "name": "NHK国際",
+            "url": "https://www.nhk.or.jp/rss/news/cat4.xml"
+        },
+        {
+            "name": "NHK科学文化",
+            "url": "https://www.nhk.or.jp/rss/news/cat5.xml"
+        },
+        {
+            "name": "NHKスポーツ",
+            "url": "https://www.nhk.or.jp/rss/news/cat6.xml"
+        },
+        {
+            "name": "NHK地域",
+            "url": "https://www.nhk.or.jp/rss/news/cat7.xml"
+        },
+        {
+            "name": "日経新聞",
+            "url": "https://rss.wor.jp/rss/nikkei"
+        },
+        {
+            "name": "日経新聞速報",
+            "url": "https://rss.wor.jp/rss/nikkei/breaking"
+        },
+        {
+            "name": "日経新聞政治",
+            "url": "https://rss.wor.jp/rss/nikkei/politics"
+        },
+        {
+            "name": "日経新聞経済",
+            "url": "https://rss.wor.jp/rss/nikkei/economy"
+        },
+        {
+            "name": "日経新聞マーケット",
+            "url": "https://rss.wor.jp/rss/nikkei/markets"
+        },
+        {
+            "name": "日経新聞企業",
+            "url": "https://rss.wor.jp/rss/nikkei/companies"
+        },
+        {
+            "name": "日経新聞国際",
+            "url": "https://rss.wor.jp/rss/nikkei/world"
+        },
+        {
+            "name": "日経新聞社会",
+            "url": "https://rss.wor.jp/rss/nikkei/society"
+        },
+        {
+            "name": "日経新聞金融",
+            "url": "https://rss.wor.jp/rss/nikkei/finance"
+        },
+        {
+            "name": "日経新聞産業",
+            "url": "https://rss.wor.jp/rss/nikkei/industry"
+        },
+        {
+            "name": "日経新聞テクノロジー",
+            "url": "https://rss.wor.jp/rss/nikkei/technology"
+        },
+        {
+            "name": "日経新聞製造業",
+            "url": "https://rss.wor.jp/rss/nikkei/manufacturing"
+        },
+        {
+            "name": "日経新聞サービス業",
+            "url": "https://rss.wor.jp/rss/nikkei/services"
+        },
+        {
+            "name": "日経新聞エネルギー",
+            "url": "https://rss.wor.jp/rss/nikkei/energy"
+        },
+        {
+            "name": "日経新聞自動車",
+            "url": "https://rss.wor.jp/rss/nikkei/automotive"
+        },
+        {
+            "name": "日経新聞電機",
+            "url": "https://rss.wor.jp/rss/nikkei/electronics"
+        },
+        {
+            "name": "日経新聞建設",
+            "url": "https://rss.wor.jp/rss/nikkei/construction"
+        },
+        {
+            "name": "日経新聞小売",
+            "url": "https://rss.wor.jp/rss/nikkei/retail"
+        },
+        {
+            "name": "日経新聞IT",
+            "url": "https://rss.wor.jp/rss/nikkei/it"
+        },
+        {
+            "name": "日経新聞メディア",
+            "url": "https://rss.wor.jp/rss/nikkei/media"
+        },
+        {
+            "name": "日経新聞ヘルスケア",
+            "url": "https://rss.wor.jp/rss/nikkei/healthcare"
+        },
+        {
+            "name": "日経新聞食品",
+            "url": "https://rss.wor.jp/rss/nikkei/food"
+        },
+        {
+            "name": "日経新聞化学",
+            "url": "https://rss.wor.jp/rss/nikkei/chemicals"
+        },
+        {
+            "name": "日経新聞素材",
+            "url": "https://rss.wor.jp/rss/nikkei/materials"
+        },
+        {
+            "name": "日経新聞機械",
+            "url": "https://rss.wor.jp/rss/nikkei/machinery"
+        },
+        {
+            "name": "日経新聞鉄鋼",
+            "url": "https://rss.wor.jp/rss/nikkei/steel"
+        },
+        {
+            "name": "日経新聞非鉄",
+            "url": "https://rss.wor.jp/rss/nikkei/nonferrous"
+        },
+        {
+            "name": "日経新聞運輸",
+            "url": "https://rss.wor.jp/rss/nikkei/transportation"
+        },
+        {
+            "name": "日経新聞情報通信",
+            "url": "https://rss.wor.jp/rss/nikkei/information_communications"
+        },
+        {
+            "name": "日経新聞金融保険",
+            "url": "https://rss.wor.jp/rss/nikkei/finance_insurance"
+        },
+        {
+            "name": "日経新聞不動産",
+            "url": "https://rss.wor.jp/rss/nikkei/real_estate"
+        },
+        {
+            "name": "読売新聞",
+            "url": "https://rss.wor.jp/rss/yomiuri"
+        },
+        {
+            "name": "読売新聞政治",
+            "url": "https://rss.wor.jp/rss/yomiuri/politics"
+        },
+        {
+            "name": "読売新聞社会",
+            "url": "https://rss.wor.jp/rss/yomiuri/society"
+        },
+        {
+            "name": "読売新聞経済",
+            "url": "https://rss.wor.jp/rss/yomiuri/economy"
+        },
+        {
+            "name": "産経新聞",
+            "url": "https://rss.wor.jp/rss/sankei"
+        },
+        {
+            "name": "産経新聞政治",
+            "url": "https://rss.wor.jp/rss/sankei/politics"
+        },
+        {
+            "name": "産経新聞社会",
+            "url": "https://rss.wor.jp/rss/sankei/society"
+        },
+        {
+            "name": "産経新聞経済",
+            "url": "https://rss.wor.jp/rss/sankei/economy"
+        },
+        {
+            "name": "ブルームバーグ",
+            "url": "https://rss.wor.jp/rss/bloomberg"
+        },
+        {
+            "name": "ブルームバーグマーケット",
+            "url": "https://rss.wor.jp/rss/bloomberg/markets"
+        },
+        {
+            "name": "ブルームバーグテクノロジー",
+            "url": "https://rss.wor.jp/rss/bloomberg/technology"
+        },
+        {
+            "name": "47NEWS全国",
+            "url": "https://rss.wor.jp/rss/47news"
+        },
+        {
+            "name": "47NEWS政治",
+            "url": "https://rss.wor.jp/rss/47news/politics"
+        },
+        {
+            "name": "47NEWS社会",
+            "url": "https://rss.wor.jp/rss/47news/society"
+        },
+        {
+            "name": "朝日新聞",
+            "url": "https://rss.asahi.com/rss/asahi/newsheadlines.rdf"
+        },
+        {
+            "name": "朝日新聞政治",
+            "url": "https://rss.asahi.com/rss/asahi/politics.rdf"
+        },
+        {
+            "name": "朝日新聞社会",
+            "url": "https://rss.asahi.com/rss/asahi/society.rdf"
+        },
+        {
+            "name": "朝日新聞経済",
+            "url": "https://rss.asahi.com/rss/asahi/economy.rdf"
+        },
+        {
+            "name": "ロイター",
+            "url": "https://rss.wor.jp/rss/reuters"
+        },
+        {
+            "name": "ロイターマーケット",
+            "url": "https://rss.wor.jp/rss/reuters/markets"
+        },
+        {
+            "name": "ロイターテクノロジー",
+            "url": "https://rss.wor.jp/rss/reuters/technology"
+        },
+        {
+            "name": "CNN",
+            "url": "https://rss.wor.jp/rss/cnn"
+        },
+        {
+            "name": "CNN国際",
+            "url": "https://rss.wor.jp/rss/cnn/world"
+        },
+        {
+            "name": "CNNビジネス",
+            "url": "https://rss.wor.jp/rss/cnn/business"
+        },
+        {
+            "name": "BBC",
+            "url": "https://rss.wor.jp/rss/bbc"
+        },
+        {
+            "name": "BBC国際",
+            "url": "https://rss.wor.jp/rss/bbc/world"
+        },
+        {
+            "name": "BBCビジネス",
+            "url": "https://rss.wor.jp/rss/bbc/business"
+        },
+        {
+            "name": "AFP",
+            "url": "https://rss.wor.jp/rss/afp"
+        },
+        {
+            "name": "AFP国際",
+            "url": "https://rss.wor.jp/rss/afp/world"
+        },
+        {
+            "name": "ITmedia",
+            "url": "https://rss.wor.jp/rss/itmedia"
+        },
+        {
+            "name": "ITmediaテクノロジー",
+            "url": "https://rss.wor.jp/rss/itmedia/technology"
+        },
+        {
+            "name": "CNET Japan",
+            "url": "https://rss.wor.jp/rss/cnet"
+        },
+        {
+            "name": "GIGAZINE",
+            "url": "https://rss.wor.jp/rss/gigazine"
+        },
+        {
+            "name": "Engadget日本版",
+            "url": "https://rss.wor.jp/rss/engadget"
+        },
+        {
+            "name": "TechCrunch",
+            "url": "https://rss.wor.jp/rss/techcrunch"
+        },
+        {
+            "name": "CNBC",
+            "url": "https://rss.wor.jp/rss/cnbc"
+        },
+        {
+            "name": "CNBCマーケット",
+            "url": "https://rss.wor.jp/rss/cnbc/markets"
+        },
+        {
+            "name": "Financial Times",
+            "url": "https://rss.wor.jp/rss/ft"
+        },
+        {
+            "name": "Financial Timesマーケット",
+            "url": "https://rss.wor.jp/rss/ft/markets"
+        },
+        {
+            "name": "The Economist",
+            "url": "https://rss.wor.jp/rss/economist"
+        },
+        {
+            "name": "Wall Street Journal",
+            "url": "https://rss.wor.jp/rss/wsj"
+        },
+        {
+            "name": "Wall Street Journalマーケット",
+            "url": "https://rss.wor.jp/rss/wsj/markets"
+        },
+        {
+            "name": "MarketWatch",
+            "url": "https://rss.wor.jp/rss/marketwatch"
+        },
+        {
+            "name": "Yahoo Finance",
+            "url": "https://rss.wor.jp/rss/yahoo_finance"
+        },
+        {
+            "name": "Yahoo!ニュース",
+            "url": "https://rss.wor.jp/rss/yahoo"
+        },
+        {
+            "name": "Yahoo!ニュース政治",
+            "url": "https://rss.wor.jp/rss/yahoo/politics"
+        },
+        {
+            "name": "Yahoo!ニュース社会",
+            "url": "https://rss.wor.jp/rss/yahoo/society"
+        },
+        {
+            "name": "Yahoo!ニュース経済",
+            "url": "https://rss.wor.jp/rss/yahoo/economy"
+        },
+        {
+            "name": "Yahoo!ニュースエンタメ",
+            "url": "https://rss.wor.jp/rss/yahoo/entertainment"
+        }
+    ],
+    "google_sheets": {
+        "spreadsheet_id": "1JMmdKwwcA06w_1IHOOrrixtKJI9QVndnXMeQnen1sik",
+        "client_id": "9219583408595-4ilZNt06CSNYk1R6qLxAkVbw.apps.googleusercontent.com",
+        "client_secret": "GOCSPX-4ilZNt06CSNYk1R6qLxAkVbw"
+    },
+    "slack": {
+        "token": "xoxb-9219583408595-9221618983494-4ilZNt06CSNYk1R6qLxAkVbw",
+        "channel": "#scraping",
+        "enabled": true
+    }
 }
