@@ -354,13 +354,13 @@
         }
     ],
     "google_sheets": {
-        "spreadsheet_id": "1JMmdKwwcA06w_1IHOOrrixtKJI9QVndnXMeQnen1sik",
-        "client_id": "9219583408595-4ilZNt06CSNYk1R6qLxAkVbw.apps.googleusercontent.com",
-        "client_secret": "GOCSPX-4ilZNt06CSNYk1R6qLxAkVbw"
+        "spreadsheet_id": "",
+        "client_id": "",
+        "client_secret": ""
     },
     "slack": {
-        "token": "xoxb-9219583408595-9221618983494-4ilZNt06CSNYk1R6qLxAkVbw",
-        "channel": "#scraping",
+        "token": "",
+        "channel": "",
         "enabled": true
     }
 }
