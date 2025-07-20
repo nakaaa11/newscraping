@@ -7,6 +7,10 @@ import datetime
 from typing import List, Dict
 import requests
 from bs4 import BeautifulSoup
+from transformers import pipeline
+
+# 要約パイプラインの初期化（グローバルで一度だけ）
+summarizer = pipeline('summarization', model='sshleifer/distilbart-cnn-12-6')
 
 def fetch_feed(feed_url: str, source_name: str) -> List[Dict]:
     """RSS フィードを解析し、記事のリストを返す"""
@@ -18,7 +22,8 @@ def fetch_feed(feed_url: str, source_name: str) -> List[Dict]:
             'title': entry.get('title', ''),
             'link': entry.get('link', ''),
             'published': entry.get('published', ''),
-            'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+            'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'summary': ''  # 後で要約を付与
         })
     return items
 
@@ -55,8 +60,8 @@ def scrape_fsa_news() -> List[Dict]:
                         'source': '金融庁',
                         'title': title,
                         'link': full_url,
-                        'published': datetime.datetime.now(datetime.UTC).isoformat(),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'published': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
                     if len(news_items) >= 10:  # 最新10件まで
@@ -115,8 +120,8 @@ def scrape_nhk_news() -> List[Dict]:
                                 'source': 'NHKニュース',
                                 'title': title,
                                 'link': full_url,
-                                'published': datetime.datetime.now(datetime.UTC).isoformat(),
-                                'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                                'published': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                                'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                             })
                 
             except Exception as e:
@@ -178,8 +183,8 @@ def scrape_investing_news() -> List[Dict]:
                                 'source': 'Investing.com',
                                 'title': title,
                                 'link': full_url,
-                                'published': datetime.datetime.now(datetime.UTC).isoformat(),
-                                'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                                'published': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                                'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                             })
                             
                             if len(news_items) >= 10:  # 最新10件まで
@@ -221,7 +226,7 @@ def scrape_bloomberg_news() -> List[Dict]:
                 'title': entry.get('title', ''),
                 'link': entry.get('link', ''),
                 'published': entry.get('published', ''),
-                'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
             })
         
         print(f"Bloombergから {len(news_items)} 件のニュースを取得")
@@ -261,7 +266,7 @@ def scrape_wsj_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -311,7 +316,7 @@ def scrape_bss_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -355,7 +360,7 @@ def scrape_reuters_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -399,7 +404,7 @@ def scrape_cnbc_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -443,7 +448,7 @@ def scrape_financial_times_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -487,7 +492,7 @@ def scrape_economist_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -567,8 +572,8 @@ def scrape_nikkei_news() -> List[Dict]:
                                 'source': '日経新聞',
                                 'title': title,
                                 'link': full_url,
-                                'published': datetime.datetime.now(datetime.UTC).isoformat(),
-                                'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                                'published': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                                'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                             })
                 
             except Exception as e:
@@ -614,7 +619,7 @@ def scrape_yahoo_finance_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -658,7 +663,7 @@ def scrape_marketwatch_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -702,7 +707,7 @@ def scrape_techcrunch_news() -> List[Dict]:
                         'title': entry.get('title', ''),
                         'link': entry.get('link', ''),
                         'published': entry.get('published', ''),
-                        'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
+                        'fetched_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
                     })
                     
             except Exception as e:
@@ -782,13 +787,28 @@ def collect_all(feeds: List[Dict]) -> pd.DataFrame:
     techcrunch_items = scrape_techcrunch_news()
     all_items.extend(techcrunch_items)
     
-    # 重複を除去
-    seen_titles = set()
+    # 重複を除去（タイトルとリンクの両方で判定）
+    seen = set()
     unique_items = []
     for item in all_items:
-        if item['title'] not in seen_titles:
-            seen_titles.add(item['title'])
+        key = (item.get('title', ''), item.get('link', ''))
+        if key not in seen:
+            seen.add(key)
             unique_items.append(item)
-    
     df = pd.DataFrame(unique_items)
+    # --- 要約の自動付与 ---
+    if not df.empty:
+        def summarize_text(row):
+            text = row['title']
+            try:
+                # 100文字以上なら要約、短い場合はそのまま
+                if len(text) > 100:
+                    summary = summarizer(text, max_length=40, min_length=10, do_sample=False)[0]['summary_text']
+                else:
+                    summary = text
+                return summary
+            except Exception as e:
+                print(f"要約生成エラー: {e}")
+                return text
+        df['summary'] = df.apply(summarize_text, axis=1)
     return df
