@@ -5,11 +5,17 @@ from sheets import write_to_sheet
 from auth import get_sheets_client
 from slack_notifier import SlackNotifier
 import traceback
+import datetime
 
 def load_config():
     """設定ファイルを読み込む"""
     with open('config.json', 'r', encoding='utf-8') as f:
         return json.load(f)
+
+def get_current_sheet_name():
+    """現在の年月を取得してシート名を生成"""
+    current_date = datetime.datetime.now()
+    return current_date.strftime("%Y%m")  # 例: 202507, 202508
 
 def job():
     """メインのジョブ関数"""
@@ -60,6 +66,10 @@ def job():
                 slack_notifier.send_error_notification(error_msg)
             return
         
+        # シート名を取得
+        sheet_name = get_current_sheet_name()
+        print(f"Target sheet: {sheet_name}")
+        
         # Google Sheetsに書き込み
         try:
             write_to_sheet(df, config)
@@ -71,8 +81,8 @@ def job():
                 sources = df['source'].value_counts().to_dict()
                 total_articles = len(df)
                 
-                # 成功通知を送信
-                slack_success = slack_notifier.send_news_summary(df, total_articles, sources)
+                # 成功通知を送信（シート名を含む）
+                slack_success = slack_notifier.send_news_summary(df, total_articles, sources, sheet_name)
                 if slack_success:
                     print("Slack通知送信完了")
                 else:

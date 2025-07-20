@@ -41,7 +41,7 @@ class SlackNotifier:
             print(f"Slack通知送信エラー: {e}")
             return False
     
-    def send_news_summary(self, df, total_articles: int, sources: Dict[str, int]) -> bool:
+    def send_news_summary(self, df, total_articles: int, sources: Dict[str, int], sheet_name: str = None) -> bool:
         """
         ニュース収集完了のサマリーをSlackに送信
         
@@ -49,6 +49,7 @@ class SlackNotifier:
             df: 収集されたニュースのDataFrame
             total_articles (int): 総記事数
             sources (Dict[str, int]): ソース別記事数
+            sheet_name (str): 書き込み先シート名
             
         Returns:
             bool: 送信成功時True、失敗時False
@@ -64,6 +65,7 @@ class SlackNotifier:
 🕐 実行時刻: {now}
 📊 総記事数: {total_articles}件
 📈 ソース数: {len(sources)}件
+📋 書き込み先シート: {sheet_name or 'N/A'}
 
 📋 *ソース別記事数:*
 """
@@ -79,7 +81,7 @@ class SlackNotifier:
                 title = row['title'][:100] + "..." if len(row['title']) > 100 else row['title']
                 message += f"• [{source}] {title}\n"
             
-            message += "\n✅ Google Sheetsに正常に書き込み完了"
+            message += "\n✅ Google Sheetsに正常に書き込み完了（蓄積モード）"
             
             return self.send_notification(message)
             
