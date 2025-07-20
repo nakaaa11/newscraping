@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 
 def write_to_sheet(df: pd.DataFrame, config: dict):
-    """DataFrame を指定スプレッドシートに月ごとのシートに蓄積書き込み"""
+    """DataFrame を指定スプレッドシートに月ごとのシートに蓄積書き込み（ソース、タイトル、リンクのみ）"""
     try:
         print("Starting Google Sheets authentication...")
         client = get_sheets_client(
@@ -27,7 +27,7 @@ def write_to_sheet(df: pd.DataFrame, config: dict):
             print(f"Sheet '{sheet_name}' already exists, using existing sheet")
         except:
             print(f"Creating new sheet '{sheet_name}'")
-            worksheet = sh.add_worksheet(title=sheet_name, rows=1000, cols=10)
+            worksheet = sh.add_worksheet(title=sheet_name, rows=1000, cols=3)
         
         print("Spreadsheet opened successfully!")
 
@@ -43,20 +43,23 @@ def write_to_sheet(df: pd.DataFrame, config: dict):
         # ヘッダーが存在しない場合は追加
         if next_row == 1:
             print("Adding headers...")
-            headers = df.columns.values.tolist()
-            worksheet.update('A1:' + chr(ord('A') + len(headers) - 1) + '1', [headers])
+            headers = ['source', 'title', 'link']
+            worksheet.update('A1:C1', [headers])
             next_row = 2
 
+        # 必要な列のみを選択してデータを準備
+        selected_columns = ['source', 'title', 'link']
+        df_selected = df[selected_columns]
+        
         # データを追加書き込み
-        values = df.values.tolist()
+        values = df_selected.values.tolist()
         print(f"Writing {len(values)} rows to sheet starting from row {next_row}...")
         
         # データを書き込み
         if values:
-            # 行の範囲を計算
+            # 行の範囲を計算（3列: A, B, C）
             end_row = next_row + len(values) - 1
-            end_col = chr(ord('A') + len(df.columns) - 1)
-            range_name = f'A{next_row}:{end_col}{end_row}'
+            range_name = f'A{next_row}:C{end_row}'
             
             worksheet.update(range_name, values)
             print(f"Data written successfully to range {range_name}!")

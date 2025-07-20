@@ -76,7 +76,13 @@ def scrape_nhk_news() -> List[Dict]:
         urls = [
             "https://www3.nhk.or.jp/news/",
             "https://www3.nhk.or.jp/news/easy/",
-            "https://www3.nhk.or.jp/news/special/"
+            "https://www3.nhk.or.jp/news/special/",
+            "https://www3.nhk.or.jp/news/politics/",
+            "https://www3.nhk.or.jp/news/economy/",
+            "https://www3.nhk.or.jp/news/society/",
+            "https://www3.nhk.or.jp/news/world/",
+            "https://www3.nhk.or.jp/news/science/",
+            "https://www3.nhk.or.jp/news/sports/"
         ]
         
         headers = {
@@ -117,8 +123,8 @@ def scrape_nhk_news() -> List[Dict]:
                 print(f"NHK {url} のスクレイピングエラー: {e}")
                 continue
         
-        # 最新20件まで取得
-        all_news_items = all_news_items[:20]
+        # 最新50件まで取得（以前は20件）
+        all_news_items = all_news_items[:50]
         print(f"NHKニュースから {len(all_news_items)} 件のニュースを取得")
         return all_news_items
         
@@ -501,8 +507,34 @@ def scrape_nikkei_news() -> List[Dict]:
         print("日経新聞のニュースをスクレイピング中...")
         urls = [
             "https://www.nikkei.com/news/",
-            "https://www.nikkei.com/markets/",
-            "https://www.nikkei.com/business/"
+            "https://www.nikkei.com/news/politics/",
+            "https://www.nikkei.com/news/economy/",
+            "https://www.nikkei.com/news/society/",
+            "https://www.nikkei.com/news/world/",
+            "https://www.nikkei.com/news/technology/",
+            "https://www.nikkei.com/news/companies/",
+            "https://www.nikkei.com/news/markets/",
+            "https://www.nikkei.com/news/finance/",
+            "https://www.nikkei.com/news/industry/",
+            "https://www.nikkei.com/news/energy/",
+            "https://www.nikkei.com/news/automotive/",
+            "https://www.nikkei.com/news/electronics/",
+            "https://www.nikkei.com/news/construction/",
+            "https://www.nikkei.com/news/retail/",
+            "https://www.nikkei.com/news/services/",
+            "https://www.nikkei.com/news/it/",
+            "https://www.nikkei.com/news/media/",
+            "https://www.nikkei.com/news/healthcare/",
+            "https://www.nikkei.com/news/food/",
+            "https://www.nikkei.com/news/chemicals/",
+            "https://www.nikkei.com/news/materials/",
+            "https://www.nikkei.com/news/machinery/",
+            "https://www.nikkei.com/news/steel/",
+            "https://www.nikkei.com/news/nonferrous/",
+            "https://www.nikkei.com/news/transportation/",
+            "https://www.nikkei.com/news/information_communications/",
+            "https://www.nikkei.com/news/finance_insurance/",
+            "https://www.nikkei.com/news/real_estate/"
         ]
         
         headers = {
@@ -522,7 +554,7 @@ def scrape_nikkei_news() -> List[Dict]:
                 
                 for link in news_links:
                     href = link.get('href')
-                    if href and '/article/' in href and not href.startswith('http'):
+                    if href and '/news/' in href and not href.startswith('http'):
                         # 相対URLを絶対URLに変換
                         if href.startswith('/'):
                             full_url = f"https://www.nikkei.com{href}"
@@ -538,14 +570,13 @@ def scrape_nikkei_news() -> List[Dict]:
                                 'published': datetime.datetime.now(datetime.UTC).isoformat(),
                                 'fetched_at': datetime.datetime.now(datetime.UTC).isoformat()
                             })
-                            
-                            if len(all_news_items) >= 15:  # 最新15件まで
-                                break
                 
             except Exception as e:
                 print(f"日経新聞 {url} のスクレイピングエラー: {e}")
                 continue
         
+        # 最新100件まで取得（以前は16件）
+        all_news_items = all_news_items[:100]
         print(f"日経新聞から {len(all_news_items)} 件のニュースを取得")
         return all_news_items
         
