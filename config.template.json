@@ -1,0 +1,22 @@
+{
+    "rss_feeds": [
+        {
+            "name": "NHK総合",
+            "url": "https://www.nhk.or.jp/rss/news/cat0.xml"
+        },
+        {
+            "name": "朝日新聞",
+            "url": "https://rss.asahi.com/rss/asahi/newsheadlines.rdf"
+        }
+    ],
+    "google_sheets": {
+        "spreadsheet_id": "YOUR_SPREADSHEET_ID_HERE",
+        "client_id": "YOUR_GOOGLE_CLIENT_ID_HERE",
+        "client_secret": "YOUR_GOOGLE_CLIENT_SECRET_HERE"
+    },
+    "slack": {
+        "token": "YOUR_SLACK_BOT_TOKEN_HERE",
+        "channel": "#YOUR_CHANNEL_NAME_HERE",
+        "enabled": true
+    }
+} 

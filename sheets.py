@@ -5,11 +5,14 @@ def write_to_sheet(df: pd.DataFrame, config: dict):
     """DataFrame を指定スプレッドシートに書き込む"""
     try:
         print("Starting Google Sheets authentication...")
-        client = get_sheets_client(config['client_id'], config['client_secret'])
+        client = get_sheets_client(
+            config['google_sheets']['client_id'], 
+            config['google_sheets']['client_secret']
+        )
         print("Authentication successful!")
         
-        print(f"Opening spreadsheet with ID: {config['spreadsheet_id']}")
-        sh = client.open_by_key(config['spreadsheet_id'])
+        print(f"Opening spreadsheet with ID: {config['google_sheets']['spreadsheet_id']}")
+        sh = client.open_by_key(config['google_sheets']['spreadsheet_id'])
         worksheet = sh.sheet1  # sheet1 を利用
         print("Spreadsheet opened successfully!")
 

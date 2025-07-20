@@ -1,18 +1,13 @@
-# ニューススクレイピングプロジェクト
+# ニュース収集システム
 
-RSSフィードからニュース記事を自動取得し、Google Sheetsに書き込むPythonプロジェクトです。
+このプロジェクトは、複数のニュースソースからRSSフィードを取得し、Google Sheetsに書き込むPythonアプリケーションです。
 
 ## 機能
 
-- RSSフィードからのニュース記事自動取得
+- 複数のニュースソースからのRSSフィード取得
 - Google Sheetsへの自動書き込み
-- スケジュール実行機能（APScheduler）
-- エラーハンドリング機能
-
-## 対応RSSフィード
-
-- NHK総合
-- 朝日新聞
+- Slack通知機能
+- エラーハンドリングとログ出力
 
 ## セットアップ
 
@@ -22,71 +17,111 @@ RSSフィードからニュース記事を自動取得し、Google Sheetsに書�
 pip install -r requirements.txt
 ```
 
-### 2. Google Cloud Consoleでの設定
+### 2. 設定ファイルの作成
 
-1. [Google Cloud Console](https://console.cloud.google.com/)にアクセス
-2. 新しいプロジェクトを作成
-3. Google Sheets APIを有効化
-4. OAuth 2.0クライアントIDを作成
-5. OAuth同意画面を設定
+`config.template.json`を`config.json`にコピーして、以下の情報を設定してください：
 
-### 3. 設定ファイルの更新
+#### Google Sheets設定
+- `spreadsheet_id`: Google SheetsのスプレッドシートID
+- `client_id`: Google OAuth2クライアントID
+- `client_secret`: Google OAuth2クライアントシークレット
 
-`config.json`ファイルを編集して、以下を設定：
+#### Slack設定
+- `token`: Slack Bot User OAuth Token
+- `channel`: 通知先チャンネル名（例: "#general"）
+- `enabled`: 通知機能の有効/無効
 
-```json
-{
-  "feeds": [
-    {"name": "NHK総合", "url": "https://www3.nhk.or.jp/rss/news/cat0.xml"},
-    {"name": "朝日新聞", "url": "https://www.asahi.com/rss/asahi/newsheadlines.rdf"}
-  ],
-  "spreadsheet_id": "YOUR_SPREADSHEET_ID",
-  "client_id": "YOUR_CLIENT_ID",
-  "client_secret": "YOUR_CLIENT_SECRET"
-}
-```
+### 3. Google Sheets API設定
 
-### 4. Googleスプレッドシートの準備
+1. [Google Cloud Console](https://console.cloud.google.com/)でプロジェクトを作成
+2. Google Sheets APIを有効化
+3. OAuth2クライアントIDとシークレットを取得
+4. スプレッドシートの共有設定でサービスアカウントに権限を付与
 
-1. 新しいGoogleスプレッドシートを作成
-2. スプレッドシートIDを取得（URLの一部）
-3. `config.json`の`spreadsheet_id`を更新
+### 4. Slack API設定
+
+1. [Slack API](https://api.slack.com/apps)でアプリを作成
+2. Bot Token Scopesを設定：
+   - `chat:write`
+   - `chat:write.public`
+   - `channels:read`
+3. アプリをワークスペースにインストール
+4. Bot User OAuth Tokenを取得
 
 ## 使用方法
 
-### 単発実行
+### 基本的な実行
 
 ```bash
 python main.py
 ```
 
-### スケジュール実行
+### デバッグ用スクリプト
 
-`main.py`のコメントアウトされた部分を有効化して、定期的な実行を設定できます。
+```bash
+# スクレイピングテスト
+python debug_scraper.py
+
+# Google Sheets認証テスト
+python debug_auth.py
+
+# Google Sheets書き込みテスト
+python debug_sheets.py
+
+# 詳細統計表示
+python test_details.py
+```
+
+## ニュースソース
+
+現在サポートされているニュースソース：
+
+- NHK総合
+- 朝日新聞
+- 金融庁
+- Bloomberg
+- Wall Street Journal
+- CNBC
+- Financial Times
+- The Economist
+- 日経新聞
+- Yahoo Finance
+- MarketWatch
+- TechCrunch
 
 ## ファイル構成
 
-- `main.py`: メインアプリケーション
-- `scraper.py`: RSSフィード取得機能
-- `sheets.py`: Google Sheets書き込み機能
-- `auth.py`: Google認証機能
-- `config.json`: 設定ファイル
-- `requirements.txt`: 依存関係リスト
-
-## デバッグ
-
-各機能を個別にテストするためのデバッグスクリプトが含まれています：
-
-- `debug_scraper.py`: スクレイパーテスト
-- `debug_auth.py`: 認証テスト
-- `debug_sheets.py`: Google Sheets書き込みテスト
+```
+news_scraping/
+├── main.py              # メインアプリケーション
+├── scraper.py           # スクレイピング機能
+├── auth.py              # Google認証
+├── sheets.py            # Google Sheets操作
+├── slack_notifier.py    # Slack通知機能
+├── config.json          # 設定ファイル（機密情報）
+├── config.template.json # 設定テンプレート
+├── requirements.txt     # 依存関係
+└── README.md           # このファイル
+```
 
 ## 注意事項
 
-- `token.pickle`ファイルは認証情報を含むため、`.gitignore`に含まれています
-- 初回実行時はOAuth認証が必要です
-- Google Sheets APIの利用制限に注意してください
+- `config.json`には機密情報が含まれているため、Gitにコミットされません
+- 初回実行時はGoogle OAuth2認証が必要です
+- Slack通知機能を使用する場合は、適切なスコープ設定が必要です
 
-## ライセンス
+## トラブルシューティング
 
-MIT License 
+### Google Sheets認証エラー
+- OAuth2クライアントIDとシークレットが正しく設定されているか確認
+- スプレッドシートの共有設定を確認
+
+### Slack通知エラー
+- Bot Tokenが正しく設定されているか確認
+- チャンネル名が正しいか確認
+- ボットがチャンネルに参加しているか確認
+
+### RSSフィードエラー
+- URLが有効か確認
+- ネットワーク接続を確認
+- 一部のサイトはアクセス制限がある場合があります 

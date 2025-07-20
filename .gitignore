@@ -49,6 +49,7 @@ Thumbs.db
 # Project specific
 token.pickle
 credentials.json
+config.json
 *.log
 
 # Jupyter Notebook

@@ -1,38 +1,109 @@
 import json
+import pandas as pd
 from scraper import collect_all
 from sheets import write_to_sheet
-from apscheduler.schedulers.blocking import BlockingScheduler # type: ignore
+from auth import get_sheets_client
+from slack_notifier import SlackNotifier
+import traceback
 
-def load_config(path: str = 'config.json') -> dict:
-    with open(path, 'r', encoding='utf-8') as f:
+def load_config():
+    """設定ファイルを読み込む"""
+    with open('config.json', 'r', encoding='utf-8') as f:
         return json.load(f)
 
-
 def job():
+    """メインのジョブ関数"""
     try:
+        print("Starting news collection job...")
+        
+        # 設定を読み込み
         config = load_config()
-        df = collect_all(config['feeds'])
-        print('Job executed:', df.shape[0], 'articles collected.')
-        print('Sample articles:')
+        
+        # Slack通知を初期化
+        slack_enabled = config.get('slack', {}).get('enabled', False)
+        slack_notifier = None
+        
+        if slack_enabled:
+            slack_config = config['slack']
+            slack_notifier = SlackNotifier(
+                token=slack_config['token'],
+                channel=slack_config['channel']
+            )
+            print("Slack通知機能が有効化されました")
+        
+        # ニュースを収集
+        df = collect_all(config.get('rss_feeds', []))
+        
+        if df.empty:
+            error_msg = "ニュースの収集に失敗しました"
+            print(error_msg)
+            if slack_notifier:
+                slack_notifier.send_error_notification(error_msg)
+            return
+        
+        print(f"Job executed: {len(df)} articles collected.")
+        print("Sample articles:")
         print(df.head())
         
-        # Google Sheetsへの書き込み
+        # Google Sheets認証
+        print("Starting Google Sheets authentication...")
+        try:
+            gc = get_sheets_client(
+                config['google_sheets']['client_id'],
+                config['google_sheets']['client_secret']
+            )
+            print("Google Sheets認証成功")
+        except Exception as e:
+            error_msg = f"Google Sheets認証に失敗しました: {str(e)}"
+            print(error_msg)
+            if slack_notifier:
+                slack_notifier.send_error_notification(error_msg)
+            return
+        
+        # Google Sheetsに書き込み
         try:
             write_to_sheet(df, config)
-            print('Successfully wrote to Google Sheets!')
-        except Exception as e:
-            print(f'Error writing to Google Sheets: {e}')
-            print('Continuing without Google Sheets...')
+            print("Successfully wrote to Google Sheets!")
             
+            # Slack通知を送信
+            if slack_notifier:
+                # ソース別記事数を計算
+                sources = df['source'].value_counts().to_dict()
+                total_articles = len(df)
+                
+                # 成功通知を送信
+                slack_success = slack_notifier.send_news_summary(df, total_articles, sources)
+                if slack_success:
+                    print("Slack通知送信完了")
+                else:
+                    print("Slack通知送信に失敗しました")
+        except Exception as e:
+            error_msg = f"Google Sheetsへの書き込みに失敗しました: {str(e)}"
+            print(error_msg)
+            if slack_notifier:
+                slack_notifier.send_error_notification(error_msg)
+                
     except Exception as e:
-        print(f'Error in job: {e}')
+        error_msg = f"予期しないエラーが発生しました: {str(e)}"
+        print(error_msg)
+        print("詳細エラー情報:")
+        traceback.print_exc()
+        
+        # Slack通知を送信
+        try:
+            config = load_config()
+            slack_enabled = config.get('slack', {}).get('enabled', False)
+            if slack_enabled:
+                slack_config = config['slack']
+                slack_notifier = SlackNotifier(
+                    token=slack_config['token'],
+                    channel=slack_config['channel']
+                )
+                slack_notifier.send_error_notification(error_msg)
+        except Exception as slack_error:
+            print(f"Slack通知送信エラー: {slack_error}")
 
-
-if __name__ == '__main__':
-    # 直接実行時は一度だけ実行
+if __name__ == "__main__":
+    # 一度実行
     job()
-    # スケジューラ起動（毎日 09:00 実行例）
-    # sched = BlockingScheduler()
-    # sched.add_job(job, 'cron', hour=9, minute=0)
-    # print('Scheduler started. Waiting for next run...')
-    # sched.start()
+    print("実行完了")
