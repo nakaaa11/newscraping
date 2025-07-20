@@ -6,11 +6,21 @@ from auth import get_sheets_client
 from slack_notifier import SlackNotifier
 import traceback
 import datetime
+import os
+from dotenv import load_dotenv
 
 def load_config():
     """設定ファイルを読み込む"""
     with open('config.json', 'r', encoding='utf-8') as f:
-        return json.load(f)
+        config = json.load(f)
+    # .envの読み込み
+    load_dotenv()
+    # Slack情報を環境変数で上書き
+    if 'slack' not in config:
+        config['slack'] = {}
+    config['slack']['token'] = os.getenv('SLACK_TOKEN', config['slack'].get('token'))
+    config['slack']['channel'] = os.getenv('SLACK_CHANNEL', config['slack'].get('channel'))
+    return config
 
 def get_current_sheet_name():
     """現在の年月を取得してシート名を生成"""
