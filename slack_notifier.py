@@ -3,6 +3,7 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from typing import Dict, List
 import datetime
+import os
 
 class SlackNotifier:
     def __init__(self, token: str, channel: str = "#scraping"):
@@ -43,22 +44,41 @@ class SlackNotifier:
     
     def send_news_summary(self, df, total_articles: int, sources: Dict[str, int], sheet_name: str = None) -> bool:
         """
-        ニュース収集完了のサマリーをSlackに送信
-        
-        Args:
-            df: 収集されたニュースのDataFrame
-            total_articles (int): 総記事数
-            sources (Dict[str, int]): ソース別記事数
-            sheet_name (str): 書き込み先シート名
-            
-        Returns:
-            bool: 送信成功時True、失敗時False
+        ニュース収集完了のサマリーをSlackに送信（リッチ版）
         """
         try:
-            # 現在時刻を取得
             now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            
-            # メッセージを作成
+            # カテゴリ別件数
+            cat_summary = ""
+            if 'category' in df.columns:
+                cat_counts = df['category'].value_counts()
+                for cat, cnt in cat_counts.items():
+                    cat_summary += f"• {cat}: {cnt}件\n"
+            # 重要度ランキング上位3件
+            top_articles = ""
+            if 'importance' in df.columns and 'rank' in df.columns:
+                top_df = df.sort_values('importance', ascending=False).head(3)
+                for _, row in top_df.iterrows():
+                    title = row['title'][:80] + "..." if len(row['title']) > 80 else row['title']
+                    link = row.get('link', '')
+                    summary = row.get('summary', '')[:100] + "..." if len(row.get('summary', '')) > 100 else row.get('summary', '')
+                    category = row.get('category', 'N/A')
+                    score = row.get('importance', 'N/A')
+                    top_articles += f"• <{link}|{title}>\n　カテゴリ: {category}｜重要度: {score}\n　要約: {summary}\n"
+            # エラー件数
+            error_count = 0
+            error_summary = ""
+            try:
+                if os.path.exists("error.log"):
+                    with open("error.log", encoding="utf-8") as f:
+                        lines = f.readlines()
+                        error_count = sum(1 for l in lines if "[ERROR]" in l)
+                        last_error = next((l for l in reversed(lines) if "[ERROR]" in l), None)
+                        if last_error:
+                            error_summary = last_error.strip()
+            except Exception:
+                pass
+
             message = f"""
 📰 *ニュース収集完了通知* 📰
 
@@ -66,25 +86,19 @@ class SlackNotifier:
 📊 総記事数: {total_articles}件
 📈 ソース数: {len(sources)}件
 📋 書き込み先シート: {sheet_name or 'N/A'}
+💾 DB/CSV保存: news.db, news_data.csv
 
-📋 *ソース別記事数:*
+📋 *カテゴリ別記事数:*
+{cat_summary if cat_summary else 'N/A'}
+
+📝 *重要度ランキング上位3件:*
+{top_articles if top_articles else 'N/A'}
+
+{'⚠️ *直近エラー:* ' + error_summary if error_count else '✅ エラーなし'}
+
+✅ Google Sheets/DB/CSV保存完了
 """
-            
-            # ソース別記事数を追加
-            for source, count in sorted(sources.items(), key=lambda x: x[1], reverse=True):
-                message += f"• {source}: {count}件\n"
-            
-            # 最新記事のサンプルを追加
-            message += "\n📝 *最新記事サンプル:*\n"
-            for i, row in df.head(5).iterrows():
-                source = row['source']
-                title = row['title'][:100] + "..." if len(row['title']) > 100 else row['title']
-                message += f"• [{source}] {title}\n"
-            
-            message += "\n✅ Google Sheetsに正常に書き込み完了（蓄積モード）"
-            
             return self.send_notification(message)
-            
         except Exception as e:
             print(f"Slack通知作成エラー: {e}")
             return False
