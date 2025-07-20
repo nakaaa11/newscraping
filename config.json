@@ -1,0 +1,11 @@
+{
+  "feeds": [
+    {"name": "NHK総合", "url": "https://www3.nhk.or.jp/rss/news/cat0.xml"},
+    {"name": "朝日新聞", "url": "https://www.asahi.com/rss/asahi/newsheadlines.rdf"},
+    {"name": "金融庁", "url": "https://www.fsa.go.jp/kouhou/rss.html"},
+    {"name": "Investing.com", "url": "https://jp.investing.com/webmaster-tools/rss"}
+  ],
+  "spreadsheet_id": "1JMmdKwwcA06w_1IHOOrrixtKJI9QVndnXMeQnen1sik",
+  "client_id": "864737567403-2rr2nedjhd6it4rnjh9qcijo9ocf76r2.apps.googleusercontent.com",
+  "client_secret": "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"
+}
